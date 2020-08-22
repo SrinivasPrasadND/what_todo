@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:what_todo/screens/homepage.dart';
 import 'package:what_todo/widgets.dart';
 
-class Taskpage extends StatefulWidget {
+class TaskPage extends StatefulWidget {
   @override
-  _TaskpageState createState() => _TaskpageState();
+  _TaskPageState createState() => _TaskPageState();
 }
 
-class _TaskpageState extends State<Taskpage> {
+class _TaskPageState extends State<TaskPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,7 +85,7 @@ class _TaskpageState extends State<Taskpage> {
                 child: GestureDetector(
                   onTap: () {
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Taskpage()));
+                        MaterialPageRoute(builder: (context) => TaskPage()));
                   },
                   child: Container(
                       decoration: BoxDecoration(
