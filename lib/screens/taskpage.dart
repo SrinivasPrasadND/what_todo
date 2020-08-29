@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:what_todo/database_helper.dart';
+import 'package:what_todo/models/task.dart';
 import 'package:what_todo/screens/homepage.dart';
 import 'package:what_todo/widgets.dart';
 
@@ -41,6 +43,21 @@ class _TaskPageState extends State<TaskPage> {
                         ),
                         Expanded(
                           child: TextField(
+                            onSubmitted: (value) async {
+                              print("My value is $value");
+                              if(value != ""){
+                                DatabaseHelper _dbHelper = new DatabaseHelper();
+                                Task _newTask = new Task(
+                                  title: value
+                                );
+                                
+                                await _dbHelper.insertTask(_newTask);
+                                print("New task has been inserted");
+
+                              }
+
+
+                            },
                             decoration: InputDecoration(
                                 hintText: "Enter task title",
                                 border: InputBorder.none),

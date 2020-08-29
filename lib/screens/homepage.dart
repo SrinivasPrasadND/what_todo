@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:what_todo/database_helper.dart';
 import 'package:what_todo/screens/taskpage.dart';
 import 'package:what_todo/widgets.dart';
 
@@ -9,6 +10,7 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  var _dbHelper = new DatabaseHelper();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,23 +33,22 @@ class _HomepageState extends State<Homepage> {
                   margin: EdgeInsets.only(bottom: 24.0),
                 ),
                 Expanded(
-                  child: ScrollConfiguration(
-                    behavior: NoGlowBehaviour(),
-                    child: ListView(
-                      children: <Widget>[
-                        TaskCard(
-                          title: "Get Started..",
-                          description:
-                              "Hello User.. Welcome to new TODO app to make you daily works scheduled perfectly",
+                  child: FutureBuilder(
+                    initialData: [],
+                    future: _dbHelper.getTasks(),
+                    builder: (context, snapshot) {
+                      return ScrollConfiguration(
+                        behavior: NoGlowBehaviour(),
+                        child: ListView.builder(
+                          itemCount: snapshot.data.length,
+                          itemBuilder: (context, index) {
+                            return TaskCard(
+                              title: snapshot.data[index].title,
+                            );
+                          },
                         ),
-                        TaskCard(
-                          title: "Work Out",
-                          description: "5 min pull ups",
-                        ),
-                        TaskCard(),
-                        TaskCard(),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                 )
               ],
@@ -60,7 +61,10 @@ class _HomepageState extends State<Homepage> {
               child: GestureDetector(
                 onTap: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => TaskPage()));
+                          MaterialPageRoute(builder: (context) => TaskPage()))
+                      .then((value) {
+                    setState(() {});
+                  });
                 },
                 child: Container(
                     decoration: BoxDecoration(
