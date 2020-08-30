@@ -49,26 +49,18 @@ class TodoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(
-          horizontal: 48,
-          vertical: 16
-      ),
-
+      padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
       child: Row(
         children: <Widget>[
           Container(
             width: 24,
             height: 24,
-            margin: EdgeInsets.only(
-                right: 12
-            ),
+            margin: EdgeInsets.only(right: 12),
             decoration: BoxDecoration(
                 color: isDone ? Colors.indigo : Colors.transparent,
                 borderRadius: BorderRadius.circular(8),
-            border: isDone ? null : Border.all(
-              color: Colors.grey,
-              width: 1.5
-            )),
+                border:
+                    isDone ? null : Border.all(color: Colors.grey, width: 1.5)),
             child: Image(
               image: AssetImage('assets/images/check_icon.png'),
             ),
@@ -77,8 +69,7 @@ class TodoWidget extends StatelessWidget {
             text ?? "(Unnamed Todo)",
             style: TextStyle(
                 fontSize: 16,
-                fontWeight: isDone ? FontWeight.bold : FontWeight.normal
-            ),
+                fontWeight: isDone ? FontWeight.bold : FontWeight.normal),
           )
         ],
       ),
@@ -86,12 +77,10 @@ class TodoWidget extends StatelessWidget {
   }
 }
 
-class NoGlowBehaviour extends ScrollBehavior{
+class NoGlowBehaviour extends ScrollBehavior {
   @override
   Widget buildViewPortChrome(
-      BuildContext context, Widget child, AxisDirection axisDirection){
+      BuildContext context, Widget child, AxisDirection axisDirection) {
     return child;
   }
-
 }
-
