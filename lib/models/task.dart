@@ -1,4 +1,3 @@
-
 class Task {
   final int id;
   final String title;
@@ -6,11 +5,7 @@ class Task {
 
   Task({this.id, this.title, this.description});
 
-  Map<String, dynamic> toMap(){
-    return  {
-      'id': id,
-      'title': title,
-      'description': description
-    };
+  Map<String, dynamic> toMap() {
+    return {'id': id, 'title': title, 'description': description};
   }
 }
