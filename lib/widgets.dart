@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'database_helper.dart';
+
 class TaskCard extends StatelessWidget {
   final String title;
   final String description;
@@ -41,36 +43,87 @@ class TaskCard extends StatelessWidget {
   }
 }
 
-class TodoWidget extends StatelessWidget {
+class TodoWidget extends StatefulWidget {
   final String text;
-  final bool isDone;
+  Function notifyParent;
+  bool isDone;
+  final int todoId;
 
-  TodoWidget({this.text, @required this.isDone});
+  TodoWidget(
+      {this.text,
+      @required this.isDone,
+      @required this.todoId,
+      @required this.notifyParent});
+
+  @override
+  _TodoWidgetState createState() => _TodoWidgetState();
+}
+
+class _TodoWidgetState extends State<TodoWidget> {
+  var _dbHelper = new DatabaseHelper();
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+      padding: EdgeInsets.only(top: 16, bottom: 16, left: 48, right: 16),
       child: Row(
         children: <Widget>[
-          Container(
-            width: 24,
-            height: 24,
-            margin: EdgeInsets.only(right: 12),
-            decoration: BoxDecoration(
-                color: isDone ? Colors.indigo : Colors.transparent,
-                borderRadius: BorderRadius.circular(8),
-                border:
-                    isDone ? null : Border.all(color: Colors.grey, width: 1.5)),
-            child: Image(
-              image: AssetImage('assets/images/check_icon.png'),
+          GestureDetector(
+            onTap: () async {
+              await _dbHelper.updateTodoIsDone(
+                  widget.todoId, widget.isDone == true ? 0 : 1);
+              widget.notifyParent();
+              /*setState(() {
+                widget.isDone = widget.isDone == true ? false: true;
+              });*/
+            },
+            child: Container(
+              width: 24,
+              height: 24,
+              margin: EdgeInsets.only(right: 12),
+              decoration: BoxDecoration(
+                  color: widget.isDone ? Colors.indigo : Colors.transparent,
+                  borderRadius: BorderRadius.circular(8),
+                  border: widget.isDone
+                      ? null
+                      : Border.all(color: Colors.grey, width: 1.5)),
+              child: Image(
+                image: AssetImage('assets/images/check_icon.png'),
+              ),
             ),
           ),
           Flexible(
+            fit: FlexFit.tight,
             child: Text(
-              text ?? "(Unnamed Todo)",
+              widget.text ?? "(Unnamed Todo)",
               style: TextStyle(
+                  color: widget.isDone ? Colors.grey : Colors.black,
                   fontSize: 16,
-                  fontWeight: !isDone ? FontWeight.bold : FontWeight.normal),
+                  fontWeight:
+                      !widget.isDone ? FontWeight.bold : FontWeight.normal,
+                  decoration: !widget.isDone
+                      ? TextDecoration.none
+                      : TextDecoration.lineThrough),
+            ),
+          ),
+          Visibility(
+            visible: !widget.isDone,
+            child: GestureDetector(
+              onTap: () async {
+                await _dbHelper.deleteTodo(widget.todoId);
+                widget.notifyParent();
+                setState(() {});
+              },
+              child: Padding(
+                padding: EdgeInsets.only(left: 24),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Icon(
+                    Icons.cancel,
+                    color: Colors.red,
+                  ),
+                ),
+              ),
             ),
           )
         ],

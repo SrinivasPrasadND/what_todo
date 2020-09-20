@@ -8,6 +8,7 @@ import 'package:what_todo/widgets.dart';
 
 class TaskPage extends StatefulWidget {
   final Task task;
+
   TaskPage({@required this.task});
 
   @override
@@ -26,6 +27,7 @@ class _TaskPageState extends State<TaskPage> {
   bool contentVisible = false;
 
   DatabaseHelper _dbHelper = new DatabaseHelper();
+
   @override
   void initState() {
     if (widget.task != null) {
@@ -141,19 +143,15 @@ class _TaskPageState extends State<TaskPage> {
                           child: ListView.builder(
                             itemCount: snapshot.data.length,
                             itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () async {
-                                  await _dbHelper.updateTodoIsDone(
-                                      snapshot.data[index].id,
-                                      snapshot.data[index].isDone == 0 ? 1 : 0);
+                              return TodoWidget(
+                                text: snapshot.data[index].text,
+                                todoId: snapshot.data[index].id,
+                                isDone: snapshot.data[index].isDone == 1
+                                    ? true
+                                    : false,
+                                notifyParent: () {
                                   setState(() {});
                                 },
-                                child: TodoWidget(
-                                  text: snapshot.data[index].text,
-                                  isDone: snapshot.data[index].isDone == 1
-                                      ? true
-                                      : false,
-                                ),
                               );
                             },
                           ),
@@ -167,47 +165,33 @@ class _TaskPageState extends State<TaskPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Container(
-                              width: 24,
-                              height: 24,
-                              margin: EdgeInsets.only(left: 32),
-                              decoration: BoxDecoration(
-                                  color: Colors.transparent,
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                      color: Colors.grey, width: 1.5)),
-                              child: Image(
-                                image:
-                                    AssetImage('assets/images/check_icon.png'),
-                              ),
-                            ),
-                          ),
                           Expanded(
-                            child: TextField(
-                              focusNode: _todoFocus,
-                              controller: TextEditingController()..text = "",
-                              onSubmitted: (value) async {
-                                print("My value is $value");
-                                if (value != "") {
-                                  if (_taskId != 0) {
-                                    Todo _newTodo = new Todo(
-                                        text: value.toString(),
-                                        isDone: 0,
-                                        taskId: _taskId);
-                                    await _dbHelper.insertTodo(_newTodo);
-                                    setState(() {});
-                                    _todoFocus.requestFocus();
-                                    print("New todo has been inserted");
-                                  } else {
-                                    print("Update Existing todo");
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 48),
+                              child: TextField(
+                                focusNode: _todoFocus,
+                                controller: TextEditingController()..text = "",
+                                onSubmitted: (value) async {
+                                  print("My value is $value");
+                                  if (value != "") {
+                                    if (_taskId != 0) {
+                                      Todo _newTodo = new Todo(
+                                          text: value.toString(),
+                                          isDone: 0,
+                                          taskId: _taskId);
+                                      await _dbHelper.insertTodo(_newTodo);
+                                      setState(() {});
+                                      _todoFocus.requestFocus();
+                                      print("New todo has been inserted");
+                                    } else {
+                                      print("Update Existing todo");
+                                    }
                                   }
-                                }
-                              },
-                              decoration: InputDecoration(
-                                  hintText: "Enter Todo Item",
-                                  border: InputBorder.none),
+                                },
+                                decoration: InputDecoration(
+                                    hintText: "Enter Todo Item",
+                                    border: InputBorder.none),
+                              ),
                             ),
                           ),
                         ],
@@ -221,8 +205,8 @@ class _TaskPageState extends State<TaskPage> {
                 child: Positioned(
                   bottom: 24.0,
                   right: 24.0,
-                  width: 60.0,
-                  height: 60.0,
+                  width: 54.0,
+                  height: 54.0,
                   child: GestureDetector(
                     onTap: () async {
                       if (_taskId != 0) {

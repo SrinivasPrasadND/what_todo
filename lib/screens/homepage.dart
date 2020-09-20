@@ -12,6 +12,7 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   var _dbHelper = new DatabaseHelper();
+
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -79,8 +80,8 @@ class _HomepageState extends State<Homepage> {
               Positioned(
                 bottom: 0.0,
                 right: 0.0,
-                width: 60.0,
-                height: 60.0,
+                width: 54.0,
+                height: 54.0,
                 child: GestureDetector(
                   onTap: () {
                     Navigator.push(

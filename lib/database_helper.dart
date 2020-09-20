@@ -77,14 +77,24 @@ class DatabaseHelper {
     });
   }
 
-  Future<void> updateTodoIsDone(int taskId, int status) async {
+  Future<void> updateTodoIsDone(int id, int status) async {
     var _db = await database();
-    await _db.rawUpdate("UPDATE todo SET isDone = $status WHERE id = $taskId");
+    await _db.rawUpdate("UPDATE todo SET isDone = $status WHERE id = $id");
+  }
+
+  Future<void> clearTodoIsDone(int taskId) async {
+    var _db = await database();
+    await _db.rawUpdate("DELETE FROM todo WHERE taskId = $taskId");
   }
 
   Future<void> deleteTask(int taskId) async {
     var _db = await database();
     await _db.rawUpdate("DELETE FROM todo WHERE taskId = $taskId");
     await _db.rawUpdate("DELETE FROM tasks WHERE id = $taskId");
+  }
+
+  Future<void> deleteTodo(int id) async {
+    var _db = await database();
+    await _db.rawUpdate("DELETE FROM todo WHERE id = $id");
   }
 }
